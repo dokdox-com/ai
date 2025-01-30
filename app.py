@@ -2,7 +2,7 @@ import cohere
 import streamlit as st
 
 # Streamlit secrets에서 API 키 가져오기
-api_key = "Jd7EmJVUo3X1GDVsyW3TOjZxmKAwdquS9R3bQRI1"
+api_key = st.secrets["key"]
 
 
 #경고
