@@ -2,7 +2,7 @@ import cohere
 import streamlit as st
 
 # Streamlit secrets에서 API 키 가져오기
-api_key = st.secrets["key"]
+api_key = "Jd7EmJVUo3X1GDVsyW3TOjZxmKAwdquS9R3bQRI1"
 
 
 #경고
@@ -23,7 +23,7 @@ st.write("Thank you for using the free AI service!")
 # 사이드바에 슬라이더 추가
 
 # 응답 히스토리 초기화
-num_sentences = st.sidebar.slider("토큰범위설정-0으로 할 경우 오류가 발생할수도 있습니다.", min_value=0, max_value=1000, value=5)
+num_sentences = st.sidebar.slider("토큰범위설정-0으로 할 경우 오류가 발생할수도 있습니다.", min_value=0, max_value=100, value=50)
 
 # 사용자 입력 받기
 user_input = st.chat_input("대화하려면 여기에 입력하세요.../Type here to chat!")
