@@ -23,7 +23,7 @@ st.write("Thank you for using the free AI service!")
 
 # 사이드바에 슬라이더 추가
 # 응답 히스토리 초기화
-num_sentences = st.sidebar.slider("토큰허용수", min_value=1, max_value=5000000000000000000000000, value=50)
+num_sentences = st.sidebar.slider("토큰허용수", min_value=1, max_value=50000, value=50)
 t = st.sidebar.slider("온화도", min_value=0, max_value=1, value=1)
 # 사용자 입력 받기
 user_input = st.chat_input("대화하려면 여기에 입력하세요.../Type here to chat!")
