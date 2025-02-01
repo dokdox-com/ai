@@ -31,22 +31,22 @@ if weather_data:
     temperature = weather_data["main"]["temp"]
     weather_condition = weather_data["weather"][0]["description"]
     weather_icon = weather_data["weather"][0]["icon"]
-    st.image(f"http://openweathermap.org/img/wn/{weather_icon}@2x.png", width=50)
+    st.image(f"http://openweathermap.org/img/wn/{weather_icon}@2x.png", width=150)
 
     st.write(f"{location}의 현재 날씨: {weather_condition} / 기온: {temperature}°C")
 
     # 활동 추천을 위한 AI 모델 호출
     activity_prompt = f"현재 날씨는 {weather_condition}이고 기온은 {temperature}°C 입니다. 이 날씨에 맞는 추천 활동을 제시해주세요."
 
-    response = co.generate(
+    response = co.chat(
         model="command-r7b-12-2024",
-        prompt=activity_prompt,
+        response=activity_prompt,
         max_tokens=100,
         temperature=0.7
     )
 
     recommended_activity = response.generations[0].text.strip()
-    st.write(f"추천 활동: {recommended_activity}")
+    st.write(f"추천 활동: {response}")
 
 else:
     st.write(f"{location}의 날씨 정보를 불러오는 데 실패했습니다. 도시 이름을 다시 입력해보세요.")
