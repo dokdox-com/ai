@@ -45,8 +45,9 @@ if weather_data:
         temperature=0.7
     )
 
-    recommended_activity = response.generations[0].text.strip()
-    st.write(f"추천 활동: {response}")
+    recommended_activity = response.generations[0].text.strip()  # Extract the activity suggestion
+    st.write(f"추천 활동: {recommended_activity}")  # Corrected this line
 
 else:
     st.write(f"{location}의 날씨 정보를 불러오는 데 실패했습니다. 도시 이름을 다시 입력해보세요.")
+
