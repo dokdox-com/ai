@@ -34,10 +34,11 @@ if weather_data:
     st.write(f"{location}의 현재 날씨: {weather_condition} / 기온: {temperature}°C")
 
     # 활동 추천을 위한 AI 모델 호출
-    user_input = f"현재 날씨는 {weather_condition}이고 기온은 {temperature}°C 입니다. 이 날씨에 맞는 추천 활동을 제시해주세요."
+    user_input = f"현재 날씨는 {weather_condition}이고 기온은 {temperature}°C 입니다. 이 날씨에 맞는 추천 활동을 4가지 정도  제시해주세요."
 
     response = co.chat(
         model="command-r7b-12-2024",
         messages=[{'role': 'user', 'content': user_input }],
     )
+    st.write(response.message.content[0].text)
 
