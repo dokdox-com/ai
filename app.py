@@ -13,7 +13,7 @@ co = cohere.ClientV2(cohere_api_key)
 st.warning("이 페이지는 개발 중입니다. 오류가 발생할 수 있습니다.")
 
 # 사용자 위치 입력받기
-location = st.text_input("도시 이름을 입력하세요.", "Seoul")
+location = st.text_input("도시 이름을 입력하세요.", "busan")
 
 # 날씨 정보 가져오기
 def get_weather_data(location):
