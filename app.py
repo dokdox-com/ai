@@ -20,8 +20,6 @@ def get_weather_data(location):
     url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={weather_api_key}&units=metric&lang=kr"
     response = requests.get(url)
     data = response.json()
-    if data["cod"] != 200:
-        return None
     return data
 
 weather_data = get_weather_data(location)
@@ -36,18 +34,11 @@ if weather_data:
     st.write(f"{location}의 현재 날씨: {weather_condition} / 기온: {temperature}°C")
 
     # 활동 추천을 위한 AI 모델 호출
-    activity_prompt = f"현재 날씨는 {weather_condition}이고 기온은 {temperature}°C 입니다. 이 날씨에 맞는 추천 활동을 제시해주세요."
+    user_input = f"현재 날씨는 {weather_condition}이고 기온은 {temperature}°C 입니다. 이 날씨에 맞는 추천 활동을 제시해주세요."
 
     response = co.chat(
         model="command-r7b-12-2024",
-        response=activity_prompt,
-        max_tokens=100,
-        temperature=0.7
+        messages=[{'role': 'user', 'content': user_input }],
+        tokens=0.7
     )
-
-    recommended_activity = response.generations[0].text.strip()  # Extract the activity suggestion
-    st.write(f"추천 활동: {recommended_activity}")  # Corrected this line
-
-else:
-    st.write(f"{location}의 날씨 정보를 불러오는 데 실패했습니다. 도시 이름을 다시 입력해보세요.")
 
