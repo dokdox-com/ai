@@ -39,6 +39,5 @@ if weather_data:
     response = co.chat(
         model="command-r7b-12-2024",
         messages=[{'role': 'user', 'content': user_input }],
-        tokens=0.7
     )
 
