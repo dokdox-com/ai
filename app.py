@@ -1,43 +1,52 @@
 import cohere
 import streamlit as st
+import requests
 
 # Streamlit secrets에서 API 키 가져오기
-api_key = st.secrets["key"]
+cohere_api_key = st.secrets["key"]
+weather_api_key = st.secrets["wkey"]  # OpenWeatherMap API 키
 
+# Cohere 클라이언트 초기화
+co = cohere.ClientV2(cohere_api_key)
 
+# Streamlit 경고 메시지
+st.warning("이 페이지는 개발 중입니다. 오류가 발생할 수 있습니다.")
 
-#경고
-st.warning("dokdox 에서 만든 이 페이지는 개발중인 기능으로 아직 완성되지 않았습니다.오류가 발생할수도 있습니다.")
-# API 클라이언트 초기화
-co = cohere.ClientV2(api_key)
+# 사용자 위치 입력받기
+location = st.text_input("도시 이름을 입력하세요.", "Seoul")
 
-#예시
-st.metric(label="Temperature", value="20°C", delta="약 20 도 증가됨")
-#링크
-st.markdown("[더 나은 dokdox 의 정보를 확인할려면 dokdox.com 에 방문해보세요.](https://dokdox.com)")
-st.link_button("dokdox 의 날씨서비스로 이동할려면 이곳을 클릭!", "https://dokdox.com")
+# 날씨 정보 가져오기
+def get_weather_data(location):
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={location}&appid={weather_api_key}&units=metric&lang=kr"
+    response = requests.get(url)
+    data = response.json()
+    if data["cod"] != 200:
+        return None
+    return data
 
-st.title("DOKDOX/AI")
-st.write("Dokdox is the world's most wonderful web service.")
-st.write("Thank you for using the free AI service!")
+weather_data = get_weather_data(location)
 
-# 사이드바에 슬라이더 추가
-# 응답 히스토리 초기화
-num_sentences = st.sidebar.slider("토큰허용수", min_value=1, max_value=1000, value=50)
-t = st.sidebar.slider("온화도", min_value=0, max_value=1, value=1)
-# 사용자 입력 받기
-user_input = st.chat_input("대화하려면 여기에 입력하세요.../Type here to chat!")
-# 사이드바에 슬라이더 추가
+if weather_data:
+    # 날씨 데이터 파싱
+    temperature = weather_data["main"]["temp"]
+    weather_condition = weather_data["weather"][0]["description"]
+    weather_icon = weather_data["weather"][0]["icon"]
+    st.image(f"http://openweathermap.org/img/wn/{weather_icon}@2x.png", width=50)
 
-# 응답 히스토리 초기화
-if user_input:
-    # Cohere API 호출 시 문장 수 제한 추가
-    response = co.chat(
+    st.write(f"{location}의 현재 날씨: {weather_condition} / 기온: {temperature}°C")
+
+    # 활동 추천을 위한 AI 모델 호출
+    activity_prompt = f"현재 날씨는 {weather_condition}이고 기온은 {temperature}°C 입니다. 이 날씨에 맞는 추천 활동을 제시해주세요."
+
+    response = co.generate(
         model="command-r7b-12-2024",
-        messages=[{'role': 'user', 'content': user_input }],
-        temperature=t,
-        max_tokens=num_sentences
-
+        prompt=activity_prompt,
+        max_tokens=100,
+        temperature=0.7
     )
-    st.chat_message("AI").write(response.message.content[0].text)
-    st.write("This AI response was generated using Cohere's language model. / Non-commercial use only.")
+
+    recommended_activity = response.generations[0].text.strip()
+    st.write(f"추천 활동: {recommended_activity}")
+
+else:
+    st.write(f"{location}의 날씨 정보를 불러오는 데 실패했습니다. 도시 이름을 다시 입력해보세요.")
